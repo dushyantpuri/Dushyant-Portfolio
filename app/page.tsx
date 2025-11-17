@@ -543,7 +543,7 @@ export default function Portfolio() {
                 className="space-y-6"
                 >
                
-                //<input type="hidden" name="form-name" value="contact" />
+               {/* <input type="hidden" name="form-name" value="contact" /> */}
 
                 <div className="space-y-2">
                   <Label htmlFor="name">Name *</Label>
