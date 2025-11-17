@@ -140,7 +140,7 @@ export default function Portfolio() {
             </Link>
 
             <a
-              href="/images/PDFs/Dushyant-Puri-Resume.pdf"
+              href="/PDFs/Dushyant-Puri-Resume.pdf"
               target="_blank"
               rel="noopener noreferrer"
               download
