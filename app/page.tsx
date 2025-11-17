@@ -1,7 +1,7 @@
 'use client'
 
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
@@ -35,6 +35,7 @@ export default function Portfolio() {
             <h1 className="font-bold text-slate-900 text-2xl">Dushyant Puri, MBA </h1>
             <div className="hidden md:flex items-center gap-6">
               <button onClick={() => scrollToSection('about')} className="text-sm text-slate-600 hover:text-slate-900 transition-colors">About</button>
+              <button onClick={() => scrollToSection('education')} className="text-sm text-slate-600 hover:text-slate-900 transition-colors">Education</button>
               <button onClick={() => scrollToSection('work')} className="text-sm text-slate-600 hover:text-slate-900 transition-colors">Work</button>
               <button onClick={() => scrollToSection('how-i-work')} className="text-sm text-slate-600 hover:text-slate-900 transition-colors">How I Work</button>
               <button onClick={() => scrollToSection('community')} className="text-sm text-slate-600 hover:text-slate-900 transition-colors">Community</button>
@@ -150,6 +151,86 @@ export default function Portfolio() {
                 Download Resume
               </Button>
             </a>
+          </div>
+        </div>
+      </section>
+
+      {/* Education & Credentials Section */}
+      <section id="education" className="py-20 px-4 bg-white">
+        <div className="container mx-auto max-w-6xl">
+          <h2 className="text-4xl font-bold text-slate-900 mb-4">Education & Credentials</h2>
+          <p className="text-lg text-slate-600 mb-12">
+            Formal training that underpins my product, delivery, and technical work.
+          </p>
+
+          {/* Degree Cards */}
+          <div className="grid md:grid-cols-3 gap-6 mb-12">
+            {/* MBA Card */}
+            <Card className="shadow-sm">
+              <CardHeader>
+                <CardTitle className="text-xl">MBA</CardTitle>
+                <CardDescription className="text-base">
+                  University Canada West • Vancouver BC
+                  <div className="text-sm text-slate-500 mt-1">2022 – 2023</div>
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ul className="text-slate-600 space-y-2">
+                  <li>• Focus on strategy, operations, and technology management</li>
+                  <li>• Applied coursework in product strategy and business analytics</li>
+                  <li>• Team projects leading cross-functional initiatives</li>
+                </ul>
+              </CardContent>
+            </Card>
+
+            {/* Postgraduate Certificate Card */}
+            <Card className="shadow-sm">
+              <CardHeader>
+                <CardTitle className="text-xl">Postgraduate – Project Management</CardTitle>
+                <CardDescription className="text-base">
+                  Conestoga College • Kitchener, ON
+                  <div className="text-sm text-slate-500 mt-1">2013 – 2014</div>
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ul className="text-slate-600 space-y-2">
+                  <li>• Advanced training in project planning, scheduling, and risk management</li>
+                  <li>• Emphasis on Agile, hybrid, and traditional delivery approaches</li>
+                  <li>• Hands-on work with stakeholder communication and governance</li>
+                </ul>
+              </CardContent>
+            </Card>
+
+            {/* Bachelor's Card */}
+            <Card className="shadow-sm">
+              <CardHeader>
+                <CardTitle className="text-xl">Bachelor's in Mechanical Engineering</CardTitle>
+                <CardDescription className="text-base">
+                  Rajiv Gandhi Technical University • Madhya Pradesh, India
+                  <div className="text-sm text-slate-500 mt-1">2006 – 2011</div>
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ul className="text-slate-600 space-y-2">
+                  <li>• Strong foundation in systems thinking and engineering principles</li>
+                  <li>• Exposure to manufacturing, design, and testing environments</li>
+                  <li>• Final-year project related to real-world engineering problems</li>
+                </ul>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Certifications */}
+          <div>
+            <h3 className="text-2xl font-bold text-slate-900 mb-6">Selected Certifications</h3>
+            <div className="flex flex-wrap gap-3">
+              <Badge variant="secondary" className="text-sm py-2 px-4">CSPO – Certified Scrum Product Owner</Badge>
+              <Badge variant="secondary" className="text-sm py-2 px-4">A-CSM – Advanced Certified ScrumMaster</Badge>
+              <Badge variant="secondary" className="text-sm py-2 px-4">PRINCE2</Badge>
+              <Badge variant="secondary" className="text-sm py-2 px-4">Lean Six Sigma</Badge>
+              <Badge variant="secondary" className="text-sm py-2 px-4">ISO 9001 Internal Auditor</Badge>
+              <Badge variant="secondary" className="text-sm py-2 px-4">Agile & Hybrid Delivery</Badge>
+            </div>
           </div>
         </div>
       </section>
