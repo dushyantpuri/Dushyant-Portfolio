@@ -542,7 +542,7 @@ export default function Portfolio() {
                 method="POST"
                 className="space-y-6"
                 >
-                //remove this line completely
+               
                 //<input type="hidden" name="form-name" value="contact" />
 
                 <div className="space-y-2">
