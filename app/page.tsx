@@ -538,12 +538,12 @@ export default function Portfolio() {
           <Card className="shadow-sm">
             <CardContent className="pt-6">
               <form
-                name="contact"
+                action="https://formspree.io/f/mjkjlrak"
                 method="POST"
-                data-netlify="true"
                 className="space-y-6"
-              >
-                <input type="hidden" name="form-name" value="contact" />
+                >
+                //remove this line completely
+                //<input type="hidden" name="form-name" value="contact" />
 
                 <div className="space-y-2">
                   <Label htmlFor="name">Name *</Label>
