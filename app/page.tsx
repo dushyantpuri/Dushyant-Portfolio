@@ -1,7 +1,7 @@
 'use client'
 
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
@@ -24,12 +24,6 @@ export default function Portfolio() {
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' })
     }
-  }
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    console.log('Form submitted:', formData)
-    // Handle form submission
   }
 
   return (
@@ -543,11 +537,19 @@ export default function Portfolio() {
 
           <Card className="shadow-sm">
             <CardContent className="pt-6">
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form
+                name="contact"
+                method="POST"
+                data-netlify="true"
+                className="space-y-6"
+              >
+                <input type="hidden" name="form-name" value="contact" />
+
                 <div className="space-y-2">
                   <Label htmlFor="name">Name *</Label>
                   <Input
                     id="name"
+                    name="name"
                     required
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
@@ -559,6 +561,7 @@ export default function Portfolio() {
                   <Label htmlFor="email">Email *</Label>
                   <Input
                     id="email"
+                    name="email"
                     type="email"
                     required
                     value={formData.email}
@@ -571,6 +574,7 @@ export default function Portfolio() {
                   <Label htmlFor="company">Company (optional)</Label>
                   <Input
                     id="company"
+                    name="company"
                     value={formData.company}
                     onChange={(e) => setFormData({ ...formData, company: e.target.value })}
                     className="bg-white"
@@ -581,6 +585,7 @@ export default function Portfolio() {
                   <Label htmlFor="message">Message *</Label>
                   <Textarea
                     id="message"
+                    name="message"
                     required
                     rows={6}
                     value={formData.message}
