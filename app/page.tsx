@@ -6,11 +6,10 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Badge } from "@/components/ui/badge"
-import { Linkedin, Download, ChevronRight, TrendingUp, Users, Clock, DollarSign, Target, Zap } from 'lucide-react'
+import { Linkedin, Download, TrendingUp, Users, Clock, DollarSign, Target, Zap } from 'lucide-react'
 import { useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
-
 
 export default function Portfolio() {
   const [formData, setFormData] = useState({
@@ -66,15 +65,15 @@ export default function Portfolio() {
                 Open to contract projects, fractional product leadership, and select full-time roles.
               </p>
               <div className="flex flex-wrap gap-4">
-                <Button 
-                  size="lg" 
+                <Button
+                  size="lg"
                   className="bg-blue-600 hover:bg-blue-700 text-white"
                   onClick={() => scrollToSection('work')}
                 >
                   View My Work
                 </Button>
-                <Button 
-                  size="lg" 
+                <Button
+                  size="lg"
                   variant="outline"
                   onClick={() => scrollToSection('contact')}
                 >
@@ -85,13 +84,13 @@ export default function Portfolio() {
             <div className="flex flex-col items-center gap-6">
               <div className="relative">
                 <div className="h-64 rounded-full overflow-hidden bg-slate-200 w-64">
-                  <Image 
+                  <Image
                     src="/images/design-mode/aCloseup.jpeg"
                     alt="Dushyant Puri - Professional headshot"
                     width={256}
                     height={256}
-                    className="object-cover w-full h-max"
-                    style={{ objectPosition: 'center top' }} // or '50% 20%' etc.
+                    className="object-cover w-full h-full"
+                    style={{ objectPosition: 'center top' }}
                   />
                 </div>
               </div>
@@ -112,7 +111,7 @@ export default function Portfolio() {
           <p className="text-lg text-slate-600 mb-12 leading-relaxed max-w-4xl">
             With over 12 years of experience, I specialize in taking organizations through full product development cycles—from ambiguity to clarity to shipped outcomes. My work spans B2B software, embedded systems, IoT platforms, and applied research initiatives. I'm known for transforming complex, messy problems into clear plans that teams can execute, and most importantly, for making sure the work actually ships.
           </p>
-          
+
           <div className="grid md:grid-cols-3 gap-8 mb-8">
             <div>
               <h3 className="text-xl font-bold text-slate-900 mb-3">Experience</h3>
@@ -135,29 +134,30 @@ export default function Portfolio() {
           </div>
 
           <div className="flex flex-wrap gap-4 items-center">
-  <Link
-    href="https://www.linkedin.com/in/puridushyant"
-    target="_blank"
-    rel="noopener noreferrer"
-  >
-    <Button variant="outline" size="lg" className="gap-2">
-      <Linkedin className="w-5 h-5" />
-      LinkedIn Profile
-    </Button>
-  </Link>
+            <Link
+              href="https://www.linkedin.com/in/puridushyant"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Button variant="outline" size="lg" className="gap-2">
+                <Linkedin className="w-5 h-5" />
+                LinkedIn Profile
+              </Button>
+            </Link>
 
-  <a
-    href="/images/PDFs/Dushyant-Puri-Resume.pdf"
-    target="_blank"
-    rel="noopener noreferrer"
-    download
-  >
-    <Button variant="outline" size="lg" className="gap-2">
-      <Download className="w-5 h-5" />
-      Download Resume
-    </Button>
-  </a>
-</div>
+            <a
+              href="/images/PDFs/Dushyant-Puri-Resume.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              download
+            >
+              <Button variant="outline" size="lg" className="gap-2">
+                <Download className="w-5 h-5" />
+                Download Resume
+              </Button>
+            </a>
+          </div>
+        </div>
       </section>
 
       {/* Featured Work Section */}
@@ -446,14 +446,14 @@ export default function Portfolio() {
       <section id="community" className="py-20 px-4 bg-blue-50">
         <div className="container mx-auto max-w-6xl">
           <h2 className="text-4xl font-bold text-slate-900 mb-8">Community & Side Projects</h2>
-          
+
           <div className="grid md:grid-cols-2 gap-12 items-start">
             <div>
               <p className="text-lg text-slate-600 leading-relaxed">
                 Beyond client work, I'm active in the product and tech community. I believe in sharing knowledge, mentoring emerging talent, and continuously building new things. Whether it's speaking at meetups, advising students, or tinkering with embedded systems on weekends, I stay engaged with the broader ecosystem.
               </p>
             </div>
-            
+
             <div className="space-y-4">
               <div className="flex items-start gap-3">
                 <div className="w-2 h-2 rounded-full bg-blue-600 mt-2"></div>
@@ -480,7 +480,7 @@ export default function Portfolio() {
       <section id="skills" className="py-20 px-4 bg-white">
         <div className="container mx-auto max-w-6xl">
           <h2 className="text-4xl font-bold text-slate-900 mb-12">Skills at a Glance</h2>
-          
+
           <div className="grid md:grid-cols-3 gap-8">
             <Card className="shadow-sm">
               <CardHeader>
@@ -546,49 +546,49 @@ export default function Portfolio() {
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="space-y-2">
                   <Label htmlFor="name">Name *</Label>
-                  <Input 
-                    id="name" 
+                  <Input
+                    id="name"
                     required
                     value={formData.name}
-                    onChange={(e) => setFormData({...formData, name: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     className="bg-white"
                   />
                 </div>
-                
+
                 <div className="space-y-2">
                   <Label htmlFor="email">Email *</Label>
-                  <Input 
-                    id="email" 
-                    type="email" 
+                  <Input
+                    id="email"
+                    type="email"
                     required
                     value={formData.email}
-                    onChange={(e) => setFormData({...formData, email: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     className="bg-white"
                   />
                 </div>
-                
+
                 <div className="space-y-2">
                   <Label htmlFor="company">Company (optional)</Label>
-                  <Input 
+                  <Input
                     id="company"
                     value={formData.company}
-                    onChange={(e) => setFormData({...formData, company: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, company: e.target.value })}
                     className="bg-white"
                   />
                 </div>
-                
+
                 <div className="space-y-2">
                   <Label htmlFor="message">Message *</Label>
-                  <Textarea 
-                    id="message" 
+                  <Textarea
+                    id="message"
                     required
                     rows={6}
                     value={formData.message}
-                    onChange={(e) => setFormData({...formData, message: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                     className="bg-white resize-none"
                   />
                 </div>
-                
+
                 <Button type="submit" size="lg" className="w-full bg-blue-600 hover:bg-blue-700 text-white">
                   Send Message
                 </Button>
@@ -600,12 +600,13 @@ export default function Portfolio() {
                   href="https://www.linkedin.com/in/puridushyant"
                   target="_blank"
                   rel="noopener noreferrer"
-                  >
+                >
                   <Button variant="outline" className="gap-2">
-                  <Linkedin className="w-5 h-5" />
-                  LinkedIn Profile
+                    <Linkedin className="w-5 h-5" />
+                    LinkedIn Profile
                   </Button>
-                  </Link>
+                </Link>
+              </div>
             </CardContent>
           </Card>
         </div>
