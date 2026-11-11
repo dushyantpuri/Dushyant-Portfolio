@@ -6,10 +6,102 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Badge } from "@/components/ui/badge"
-import { Linkedin, Download, TrendingUp, Users, Clock, DollarSign, Target, Zap } from 'lucide-react'
-import { useState } from "react"
+import {
+  Activity,
+  Clock,
+  Database,
+  DollarSign,
+  Download,
+  FileCheck,
+  Leaf,
+  Linkedin,
+  ShieldCheck,
+  Target,
+  TrendingUp,
+  Users,
+  Zap,
+  type LucideIcon,
+} from 'lucide-react'
+import { motion } from 'framer-motion'
+import { useState } from 'react'
+import {
+  compactProjects,
+  flagshipProjects,
+  type ProjectMetric,
+  type ProjectMetricIcon,
+} from '@/lib/projects'
 import Image from "next/image"
 import Link from "next/link"
+import { RevealSection } from "@/components/reveal-section"
+import { FlagshipCard } from "@/components/flagship-card"
+import { AnimatedMetric } from "@/components/animated-metric"
+
+const metricIcons: Record<ProjectMetricIcon, LucideIcon> = {
+  target: Target,
+  "trending-up": TrendingUp,
+  zap: Zap,
+  clock: Clock,
+  users: Users,
+  dollar: DollarSign,
+  activity: Activity,
+  leaf: Leaf,
+  "file-check": FileCheck,
+  database: Database,
+  shield: ShieldCheck,
+}
+
+function MetricTiles({
+  metrics,
+  compact = false,
+}: {
+  metrics: ProjectMetric[]
+  compact?: boolean
+}) {
+  return (
+    <div
+      className={
+        compact
+          ? "grid grid-cols-2 gap-2 pt-4 mt-auto"
+          : "grid grid-cols-2 md:grid-cols-4 gap-3 pt-6 mt-auto"
+      }
+    >
+      {metrics.map((metric) => {
+        const Icon = metricIcons[metric.icon]
+        return (
+          <div
+            key={metric.label}
+            className={
+              compact
+                ? "flex flex-col items-center justify-center bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-center"
+                : "flex flex-col items-center justify-center bg-slate-50 border border-slate-200 rounded-lg p-3 text-center"
+            }
+          >
+            <Icon
+              className={
+                compact ? "w-4 h-4 text-blue-600 mb-1.5" : "w-5 h-5 text-blue-600 mb-2"
+              }
+            />
+            <AnimatedMetric
+              stat={metric.stat}
+              className={
+                compact ? "text-lg font-bold text-slate-900" : "text-2xl font-bold text-slate-900"
+              }
+            />
+            <p
+              className={
+                compact
+                  ? "mt-0.5 flex min-h-[3rem] items-center justify-center text-[11px] leading-snug text-slate-600"
+                  : "mt-1 flex min-h-[4.25rem] items-center justify-center text-xs leading-snug text-slate-600"
+              }
+            >
+              {metric.label}
+            </p>
+          </div>
+        )
+      })}
+    </div>
+  )
+}
 
 export default function Portfolio() {
   const [formData, setFormData] = useState({
@@ -18,6 +110,25 @@ export default function Portfolio() {
     company: '',
     message: ''
   })
+  const [activeDomain, setActiveDomain] = useState<string>("All")
+  const [openArch, setOpenArch] = useState<Set<string>>(new Set())
+
+  const toggleArch = (slug: string) => {
+    setOpenArch((prev) => {
+      const next = new Set(prev)
+      if (next.has(slug)) next.delete(slug)
+      else next.add(slug)
+      return next
+    })
+  }
+
+  const domains = ["All", "Embedded & IoT", "Applied AI / RAG", "Enterprise & Operations"] as const
+  const filteredFlagship = activeDomain === "All"
+    ? flagshipProjects
+    : flagshipProjects.filter((p) => p.domain === activeDomain)
+  const filteredCompact = activeDomain === "All"
+    ? compactProjects
+    : compactProjects.filter((p) => p.domain === activeDomain)
 
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id)
@@ -27,42 +138,55 @@ export default function Portfolio() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-[#F7F6F2]">
       {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 bg-white/80 backdrop-blur-sm border-b border-slate-200 z-50">
+      <nav className="fixed top-0 left-0 right-0 bg-[#F7F6F2]/80 backdrop-blur-md border-b border-[#E5E2DC] z-50">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            <h1 className="font-bold text-slate-900 text-2xl">Dushyant Puri, MBA </h1>
+            <h1 className="font-serif font-bold text-[#18181B] text-2xl">Dushyant Puri, MBA </h1>
             <div className="hidden md:flex items-center gap-6">
-              <button onClick={() => scrollToSection('about')} className="text-sm text-slate-600 hover:text-slate-900 transition-colors">About</button>
-              <button onClick={() => scrollToSection('education')} className="text-sm text-slate-600 hover:text-slate-900 transition-colors">Education</button>
-              <button onClick={() => scrollToSection('work')} className="text-sm text-slate-600 hover:text-slate-900 transition-colors">Work</button>
-              <button onClick={() => scrollToSection('how-i-work')} className="text-sm text-slate-600 hover:text-slate-900 transition-colors">How I Work</button>
-              <button onClick={() => scrollToSection('community')} className="text-sm text-slate-600 hover:text-slate-900 transition-colors">Community</button>
-              <button onClick={() => scrollToSection('contact')} className="text-sm text-slate-600 hover:text-slate-900 transition-colors">Contact</button>
+              <button onClick={() => scrollToSection('about')} className="text-sm text-[#18181B] hover:text-[#14532D] transition-colors">About</button>
+              <button onClick={() => scrollToSection('education')} className="text-sm text-[#18181B] hover:text-[#14532D] transition-colors">Education</button>
+              <button onClick={() => scrollToSection('work')} className="text-sm text-[#18181B] hover:text-[#14532D] transition-colors">Work</button>
+              <button onClick={() => scrollToSection('how-i-work')} className="text-sm text-[#18181B] hover:text-[#14532D] transition-colors">How I Work</button>
+              <button onClick={() => scrollToSection('community')} className="text-sm text-[#18181B] hover:text-[#14532D] transition-colors">Community</button>
+              <button onClick={() => scrollToSection('contact')} className="text-sm text-[#18181B] hover:text-[#14532D] transition-colors">Contact</button>
             </div>
+            <button
+              onClick={() => scrollToSection('contact')}
+              className="hidden md:inline-flex items-center px-4 py-2 rounded-full bg-[#14532D] text-white text-sm font-medium hover:bg-[#0F5132] transition-colors"
+            >
+              Work With Me
+            </button>
           </div>
         </div>
       </nav>
 
       {/* Hero Section */}
+      <RevealSection>
       <section className="pt-32 pb-20 px-4">
         <div className="container mx-auto max-w-6xl">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div>
-              <h1 className="text-5xl md:text-6xl font-bold text-slate-900 mb-6 text-balance">
-                Turning vague ideas into shipped products.
+              <h1 className="text-5xl md:text-7xl font-bold text-[#18181B] mb-6 leading-[0.9] tracking-tight">
+                Turning vague
+                <br />
+                ideas into
+                <br />
+                <span className="font-serif italic text-[#C2410C]">shipped</span>
+                <br />
+                products.
               </h1>
-              <p className="text-xl text-slate-600 mb-4 leading-relaxed">
+              <p className="text-xl text-[#52525B] mb-4 leading-relaxed">
                 Product & Delivery leader with 12+ years experience in software, embedded, and IoT. I'm usually brought in when the problem is ambiguous but the outcome really matters.
               </p>
-              <p className="text-lg text-slate-700 mb-8">
+              <p className="text-lg text-[#18181B] mb-8">
                 Open to contract projects, fractional product leadership, and select full-time roles.
               </p>
               <div className="flex flex-wrap gap-4">
                 <Button
                   size="lg"
-                  className="bg-blue-600 hover:bg-blue-700 text-white"
+                  className="bg-[#14532D] hover:bg-[#0F5132] text-white rounded-full"
                   onClick={() => scrollToSection('work')}
                 >
                   View My Work
@@ -70,6 +194,7 @@ export default function Portfolio() {
                 <Button
                   size="lg"
                   variant="outline"
+                  className="rounded-full border-[#E5E2DC]"
                   onClick={() => scrollToSection('contact')}
                 >
                   Work With Me
@@ -98,6 +223,29 @@ export default function Portfolio() {
           </div>
         </div>
       </section>
+      </RevealSection>
+
+      {/* Experience & Collaborations Strip */}
+      <RevealSection delay={0.1}>
+      <section className="py-8 px-4 bg-[#18181B] border-y border-[#18181B]">
+        <div className="container mx-auto max-w-6xl">
+          <p className="text-center text-xs uppercase tracking-widest text-[#F8FAFC]/70 mb-4">
+            Experience & Collaborations
+          </p>
+          <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-[#F8FAFC]">
+            <span className="text-sm font-medium">Conestoga SMART Centre</span>
+            <span className="hidden sm:inline text-[#F8FAFC]/30">•</span>
+            <span className="text-sm font-medium">Dexterra Group</span>
+            <span className="hidden sm:inline text-[#F8FAFC]/30">•</span>
+            <span className="text-sm font-medium">Skyjack Inc.</span>
+            <span className="hidden sm:inline text-[#F8FAFC]/30">•</span>
+            <span className="text-sm font-medium">DXC Technologies</span>
+            <span className="hidden sm:inline text-[#F8FAFC]/30">•</span>
+            <span className="text-sm font-medium">Boomi IPaaS</span>
+          </div>
+        </div>
+      </section>
+      </RevealSection>
 
       {/* About Section */}
       <section id="about" className="py-20 px-4 bg-white">
@@ -236,6 +384,7 @@ export default function Portfolio() {
       </section>
 
       {/* Featured Work Section */}
+      <RevealSection delay={0.15}>
       <section id="work" className="py-20 px-4 bg-slate-50">
         <div className="container mx-auto max-w-6xl">
           <div className="mb-12">
@@ -245,221 +394,219 @@ export default function Portfolio() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-6">
-            {/* Project 1 */}
-            <Card className="shadow-sm hover:shadow-md transition-shadow flex flex-col">
-              <CardHeader>
-                <CardTitle className="text-2xl mb-4">SmartCV – Computer Vision Inventory Analytics</CardTitle>
-                <div className="flex flex-wrap gap-2 mb-4">
-                  <Badge className="bg-blue-100 text-blue-700 hover:bg-blue-100">IoT</Badge>
-                  <Badge className="bg-blue-100 text-blue-700 hover:bg-blue-100">AI/ML</Badge>
-                </div>
-              </CardHeader>
-              <CardContent className="flex flex-col flex-1">
-                <div className="space-y-4 flex-1">
-                  <div>
-                    <p className="font-semibold text-slate-900 mb-2">Problem</p>
-                    <p className="text-slate-600">Manual inventory tracking in warehouses was error-prone and time-consuming, limiting operational efficiency.</p>
-                  </div>
-                  <div>
-                    <p className="font-semibold text-slate-900 mb-2">My Role</p>
-                    <ul className="list-disc list-inside text-slate-600 space-y-1">
-                      <li>Led discovery to define MVP scope and technical feasibility</li>
-                      <li>Coordinated cross-functional team of engineers, data scientists, and operations</li>
-                      <li>Drove decision-making on edge computing architecture and camera placement</li>
-                    </ul>
-                  </div>
-                  <div>
-                    <p className="font-semibold text-slate-900 mb-2">Outcome</p>
-                    <p className="text-slate-600">MVP delivered for pilot deployment, enabling real-time inventory tracking with 95% accuracy in controlled environment.</p>
-                  </div>
-                </div>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-3 pt-6 mt-auto">
-                  <div className="bg-slate-50 border border-slate-200 rounded-lg p-3 text-center">
-                    <Target className="w-5 h-5 text-blue-600 mx-auto mb-2" />
-                    <p className="text-2xl font-bold text-slate-900">90%</p>
-                    <p className="text-xs text-slate-600">Inventory Accuracy</p>
-                  </div>
-                  <div className="bg-slate-50 border border-slate-200 rounded-lg p-3 text-center">
-                    <TrendingUp className="w-5 h-5 text-blue-600 mx-auto mb-2" />
-                    <p className="text-2xl font-bold text-slate-900">70%</p>
-                    <p className="text-xs text-slate-600">Error Reduction</p>
-                  </div>
-                  <div className="bg-slate-50 border border-slate-200 rounded-lg p-3 text-center">
-                    <Zap className="w-5 h-5 text-blue-600 mx-auto mb-2" />
-                    <p className="text-2xl font-bold text-slate-900">2×</p>
-                    <p className="text-xs text-slate-600">Productivity Increase</p>
-                  </div>
-                  <div className="bg-slate-50 border border-slate-200 rounded-lg p-3 text-center">
-                    <Clock className="w-5 h-5 text-blue-600 mx-auto mb-2" />
-                    <p className="text-2xl font-bold text-slate-900">8 Mo</p>
-                    <p className="text-xs text-slate-600">Delivery Timeline</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Project 2 */}
-            <Card className="shadow-sm hover:shadow-md transition-shadow flex flex-col">
-              <CardHeader>
-                <CardTitle className="text-2xl mb-4">Vortex iBMS – Smart Battery Platform</CardTitle>
-                <div className="flex flex-wrap gap-2 mb-4">
-                  <Badge className="bg-blue-100 text-blue-700 hover:bg-blue-100">Embedded</Badge>
-                  <Badge className="bg-blue-100 text-blue-700 hover:bg-blue-100">IoT</Badge>
-                </div>
-              </CardHeader>
-              <CardContent className="flex flex-col flex-1">
-                <div className="space-y-4 flex-1">
-                  <div>
-                    <p className="font-semibold text-slate-900 mb-2">Problem</p>
-                    <p className="text-slate-600">Industrial equipment needed intelligent battery management to prevent failures and optimize performance across distributed sites.</p>
-                  </div>
-                  <div>
-                    <p className="font-semibold text-slate-900 mb-2">My Role</p>
-                    <ul className="list-disc list-inside text-slate-600 space-y-1">
-                      <li>Framed problem with stakeholders to align on technical and business requirements</li>
-                      <li>Created phased roadmap balancing firmware, cloud platform, and analytics delivery</li>
-                      <li>Managed RAID log and unblocked engineering team through hardware integration challenges</li>
-                    </ul>
-                  </div>
-                  <div>
-                    <p className="font-semibold text-slate-900 mb-2">Outcome</p>
-                    <p className="text-slate-600">Pilot-ready system launched with remote monitoring capabilities, reducing battery-related equipment failures by 40%.</p>
-                  </div>
-                </div>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-3 pt-6 mt-auto">
-                  <div className="bg-slate-50 border border-slate-200 rounded-lg p-3 text-center">
-                    <TrendingUp className="w-5 h-5 text-blue-600 mx-auto mb-2" />
-                    <p className="text-2xl font-bold text-slate-900">15%</p>
-                    <p className="text-xs text-slate-600">Grid Usage Reduction</p>
-                  </div>
-                  <div className="bg-slate-50 border border-slate-200 rounded-lg p-3 text-center">
-                    <Users className="w-5 h-5 text-blue-600 mx-auto mb-2" />
-                    <p className="text-2xl font-bold text-slate-900">5+</p>
-                    <p className="text-xs text-slate-600">Fleet Operators</p>
-                  </div>
-                  <div className="bg-slate-50 border border-slate-200 rounded-lg p-3 text-center">
-                    <Zap className="w-5 h-5 text-blue-600 mx-auto mb-2" />
-                    <p className="text-2xl font-bold text-slate-900">85%</p>
-                    <p className="text-xs text-slate-600">Uptime Improvement</p>
-                  </div>
-                  <div className="bg-slate-50 border border-slate-200 rounded-lg p-3 text-center">
-                    <DollarSign className="w-5 h-5 text-blue-600 mx-auto mb-2" />
-                    <p className="text-2xl font-bold text-slate-900">30%</p>
-                    <p className="text-xs text-slate-600">Cost Reduction</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Project 3 */}
-            <Card className="shadow-sm hover:shadow-md transition-shadow flex flex-col">
-              <CardHeader>
-                <CardTitle className="text-2xl mb-4">Skyjack Digital Services</CardTitle>
-                <div className="flex flex-wrap gap-2 mb-4">
-                  <Badge className="bg-blue-100 text-blue-700 hover:bg-blue-100">B2B SaaS</Badge>
-                  <Badge className="bg-blue-100 text-blue-700 hover:bg-blue-100">Platform</Badge>
-                </div>
-              </CardHeader>
-              <CardContent className="flex flex-col flex-1">
-                <div className="space-y-4 flex-1">
-                  <div>
-                    <p className="font-semibold text-slate-900 mb-2">Problem</p>
-                    <p className="text-slate-600">Construction equipment manufacturer needed to launch digital services offering for fleet management and predictive maintenance.</p>
-                  </div>
-                  <div>
-                    <p className="font-semibold text-slate-900 mb-2">My Role</p>
-                    <ul className="list-disc list-inside text-slate-600 space-y-1">
-                      <li>Translated business vision into technical product roadmap with clear milestones</li>
-                      <li>Aligned engineering, design, and business stakeholders on priority features</li>
-                      <li>Drove sprint planning and risk mitigation for multi-team delivery</li>
-                    </ul>
-                  </div>
-                  <div>
-                    <p className="font-semibold text-slate-900 mb-2">Outcome</p>
-                    <p className="text-slate-600">New digital capability launched on schedule, enabling customers to monitor equipment health and reduce downtime.</p>
-                  </div>
-                </div>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-3 pt-6 mt-auto">
-                  <div className="bg-slate-50 border border-slate-200 rounded-lg p-3 text-center">
-                    <DollarSign className="w-5 h-5 text-blue-600 mx-auto mb-2" />
-                    <p className="text-2xl font-bold text-slate-900">$1M+</p>
-                    <p className="text-xs text-slate-600">Project Value</p>
-                  </div>
-                  <div className="bg-slate-50 border border-slate-200 rounded-lg p-3 text-center">
-                    <TrendingUp className="w-5 h-5 text-blue-600 mx-auto mb-2" />
-                    <p className="text-2xl font-bold text-slate-900">10%</p>
-                    <p className="text-xs text-slate-600">Revenue Growth</p>
-                  </div>
-                  <div className="bg-slate-50 border border-slate-200 rounded-lg p-3 text-center">
-                    <Users className="w-5 h-5 text-blue-600 mx-auto mb-2" />
-                    <p className="text-2xl font-bold text-slate-900">500+</p>
-                    <p className="text-xs text-slate-600">Active Users</p>
-                  </div>
-                  <div className="bg-slate-50 border border-slate-200 rounded-lg p-3 text-center">
-                    <Clock className="w-5 h-5 text-blue-600 mx-auto mb-2" />
-                    <p className="text-2xl font-bold text-slate-900">18 Mo</p>
-                    <p className="text-xs text-slate-600">Delivery Timeline</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Project 4 */}
-            <Card className="shadow-sm hover:shadow-md transition-shadow flex flex-col">
-              <CardHeader>
-                <CardTitle className="text-2xl mb-4">Packing Digitization for D2C Brand</CardTitle>
-                <div className="flex flex-wrap gap-2 mb-4">
-                  <Badge className="bg-blue-100 text-blue-700 hover:bg-blue-100">Operations</Badge>
-                  <Badge className="bg-blue-100 text-blue-700 hover:bg-blue-100">Analytics</Badge>
-                </div>
-              </CardHeader>
-              <CardContent className="flex flex-col flex-1">
-                <div className="space-y-4 flex-1">
-                  <div>
-                    <p className="font-semibold text-slate-900 mb-2">Problem</p>
-                    <p className="text-slate-600">E-commerce brand struggled with manual packing processes leading to errors, delays, and lack of visibility into fulfillment metrics.</p>
-                  </div>
-                  <div>
-                    <p className="font-semibold text-slate-900 mb-2">My Role</p>
-                    <ul className="list-disc list-inside text-slate-600 space-y-1">
-                      <li>Conducted discovery with operations team to map current process and pain points</li>
-                      <li>Designed solution architecture integrating barcode scanners, WMS, and analytics dashboard</li>
-                      <li>Managed vendor relationships and coordinated implementation with internal IT</li>
-                    </ul>
-                  </div>
-                  <div>
-                    <p className="font-semibold text-slate-900 mb-2">Outcome</p>
-                    <p className="text-slate-600">Digitized packing workflow deployed, reducing errors by 70% and providing real-time fulfillment visibility for operations team.</p>
-                  </div>
-                </div>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-3 pt-6 mt-auto">
-                  <div className="bg-slate-50 border border-slate-200 rounded-lg p-3 text-center">
-                    <TrendingUp className="w-5 h-5 text-blue-600 mx-auto mb-2" />
-                    <p className="text-2xl font-bold text-slate-900">70%</p>
-                    <p className="text-xs text-slate-600">Error Reduction</p>
-                  </div>
-                  <div className="bg-slate-50 border border-slate-200 rounded-lg p-3 text-center">
-                    <Zap className="w-5 h-5 text-blue-600 mx-auto mb-2" />
-                    <p className="text-2xl font-bold text-slate-900">2×</p>
-                    <p className="text-xs text-slate-600">Throughput Increase</p>
-                  </div>
-                  <div className="bg-slate-50 border border-slate-200 rounded-lg p-3 text-center">
-                    <Target className="w-5 h-5 text-blue-600 mx-auto mb-2" />
-                    <p className="text-2xl font-bold text-slate-900">80%</p>
-                    <p className="text-xs text-slate-600">Uptime Improvement</p>
-                  </div>
-                  <div className="bg-slate-50 border border-slate-200 rounded-lg p-3 text-center">
-                    <Clock className="w-5 h-5 text-blue-600 mx-auto mb-2" />
-                    <p className="text-2xl font-bold text-slate-900">12 Mo</p>
-                    <p className="text-xs text-slate-600">Implementation</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+          <div
+            role="tablist"
+            aria-label="Filter projects by domain"
+            className="relative flex flex-wrap gap-2 mb-8"
+          >
+            {domains.map((domain) => {
+              const isActive = activeDomain === domain
+              return (
+                <button
+                  key={domain}
+                  role="tab"
+                  aria-selected={isActive}
+                  tabIndex={isActive ? 0 : -1}
+                  onClick={() => setActiveDomain(domain)}
+                  onKeyDown={(e) => {
+                    const idx = domains.indexOf(domain)
+                    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+                      e.preventDefault()
+                      const next = domains[(idx + 1) % domains.length]
+                      setActiveDomain(next)
+                    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+                      e.preventDefault()
+                      const prev = domains[(idx - 1 + domains.length) % domains.length]
+                      setActiveDomain(prev)
+                    } else if (e.key === 'Home') {
+                      e.preventDefault()
+                      setActiveDomain(domains[0])
+                    } else if (e.key === 'End') {
+                      e.preventDefault()
+                      setActiveDomain(domains[domains.length - 1])
+                    }
+                  }}
+                  className="relative px-4 py-2 rounded-full text-sm font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#14532D]"
+                >
+                  {isActive && (
+                    <motion.span
+                      layoutId="domain-indicator"
+                      className="absolute inset-0 rounded-full bg-[#14532D]"
+                      transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                    />
+                  )}
+                  <span className={`relative z-10 ${isActive ? 'text-white' : 'text-[#18181B] hover:text-[#14532D]'}`}>
+                    {domain}
+                  </span>
+                </button>
+              )
+            })}
           </div>
+
+          {/* Tier 1 — Flagship case studies */}
+          {filteredFlagship.length > 0 && (
+            <div className="grid md:grid-cols-2 gap-6">
+              {filteredFlagship.map((project) => (
+              <FlagshipCard
+                key={project.slug}
+                className="flex flex-col"
+              >
+                <CardHeader>
+                  <CardTitle className="text-2xl mb-4 min-h-[4rem]">{project.title}</CardTitle>
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {project.tags.map((tag) => (
+                      <Badge key={tag} className="bg-blue-100 text-blue-700 hover:bg-blue-100">
+                        {tag}
+                      </Badge>
+                    ))}
+                  </div>
+                </CardHeader>
+                <CardContent className="flex flex-col flex-1">
+                  <div className="space-y-4 flex-1">
+                    <div>
+                      <p className="font-semibold text-slate-900 mb-2">Problem</p>
+                      <p className="text-slate-600">{project.problem}</p>
+                    </div>
+                    <div>
+                      <p className="font-semibold text-slate-900 mb-2">My Role</p>
+                      <ul className="list-disc list-inside text-slate-600 space-y-1">
+                        {project.role.map((item) => (
+                          <li key={item}>{item}</li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div>
+                      <p className="font-semibold text-slate-900 mb-2">Outcome</p>
+                      <p className="text-slate-600">{project.outcome}</p>
+                    </div>
+                  </div>
+                  <MetricTiles metrics={project.metrics} />
+                  {project.architectureNodes && project.architectureNodes.length > 0 && (
+                    <div className="pt-4 border-t border-slate-100">
+                      <button
+                        type="button"
+                        aria-expanded={openArch.has(project.slug)}
+                        aria-controls={`arch-${project.slug}`}
+                        onClick={() => toggleArch(project.slug)}
+                        className="text-sm font-medium text-blue-600 hover:text-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded"
+                      >
+                        {openArch.has(project.slug) ? "Hide System Architecture" : "View System Architecture"}
+                      </button>
+                      {openArch.has(project.slug) && (
+                        <div
+                          id={`arch-${project.slug}`}
+                          className="mt-4 rounded-lg border border-slate-200 bg-slate-50 p-4"
+                        >
+                          <div className="flex flex-col md:flex-row items-center gap-2 md:gap-3">
+                            {project.architectureNodes!.map((node, idx) => (
+                              <div key={node} className="flex flex-col md:flex-row items-center gap-2 md:gap-3 w-full md:w-auto">
+                                <div className="w-full md:w-auto max-w-full text-center rounded-md bg-white border border-slate-200 px-3 py-2 text-xs font-medium text-slate-700 break-words">
+                                  {node}
+                                </div>
+                                {idx < project.architectureNodes!.length - 1 && (
+                                  <span
+                                    className="text-slate-400 rotate-90 md:rotate-0"
+                                    aria-hidden="true"
+                                  >
+                                    →
+                                  </span>
+                                )}
+                              </div>
+                            ))}
+                          </div>
+                          {project.architectureNote && (
+                            <p className="mt-3 text-xs text-slate-600 leading-relaxed">
+                              {project.architectureNote}
+                            </p>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </CardContent>
+              </FlagshipCard>
+            ))}
+          </div>
+          )}
+
+          {/* Tier 2 — Compact delivered projects */}
+          {filteredCompact.length > 0 && (
+            <>
+              <h3 className="text-2xl font-bold text-slate-900 mt-16 mb-6">
+                More Delivered Projects
+              </h3>
+              <div className="grid md:grid-cols-3 gap-6">
+            {filteredCompact.map((project) => (
+              <Card
+                key={project.slug}
+                className="shadow-sm hover:shadow-md transition-shadow flex flex-col gap-4 py-5"
+              >
+                <CardHeader className="px-5">
+                  {project.date && (
+                    <p className="text-[11px] font-medium uppercase tracking-wider text-slate-500">
+                      {project.date}
+                    </p>
+                  )}
+                  <CardTitle className="text-xl leading-tight min-h-[4.75rem]">
+                    {project.title}
+                  </CardTitle>
+                  <div className="flex flex-wrap gap-2">
+                    {project.tags.map((tag) => (
+                      <Badge key={tag} className="bg-blue-100 text-blue-700 hover:bg-blue-100">
+                        {tag}
+                      </Badge>
+                    ))}
+                  </div>
+                </CardHeader>
+                <CardContent className="flex flex-col flex-1 px-5">
+                  <p className="text-sm leading-snug text-slate-600">{project.summary}</p>
+                  <MetricTiles metrics={project.metrics} compact />
+                  {project.architectureNodes && project.architectureNodes.length > 0 && (
+                    <div className="pt-2">
+                      <button
+                        type="button"
+                        aria-expanded={openArch.has(project.slug)}
+                        aria-controls={`arch-${project.slug}`}
+                        onClick={() => toggleArch(project.slug)}
+                        className="text-xs font-medium text-blue-600 hover:text-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded"
+                      >
+                        {openArch.has(project.slug) ? "Hide System Architecture" : "View System Architecture"}
+                      </button>
+                      {openArch.has(project.slug) && (
+                        <div
+                          id={`arch-${project.slug}`}
+                          className="mt-3 rounded-lg border border-slate-200 bg-slate-50 p-3"
+                        >
+                          <div className="flex flex-col gap-2">
+                            {project.architectureNodes!.map((node, idx) => (
+                              <div key={node} className="flex flex-col items-center">
+                                <div className="w-full text-center rounded-md bg-white border border-slate-200 px-2 py-1.5 text-[11px] font-medium text-slate-700">
+                                  {node}
+                                </div>
+                                {idx < project.architectureNodes!.length - 1 && (
+                                  <span className="text-slate-400" aria-hidden="true">↓</span>
+                                )}
+                              </div>
+                            ))}
+                          </div>
+                          {project.architectureNote && (
+                            <p className="mt-2 text-[11px] text-slate-600 leading-relaxed">
+                              {project.architectureNote}
+                            </p>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+            </>
+          )}
         </div>
       </section>
+      </RevealSection>
 
       {/* How I Work Section */}
       <section id="how-i-work" className="py-20 px-4 bg-white">
@@ -556,51 +703,61 @@ export default function Portfolio() {
         <div className="container mx-auto max-w-6xl">
           <h2 className="text-4xl font-bold text-slate-900 mb-12">Skills at a Glance</h2>
 
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             <Card className="shadow-sm">
               <CardHeader>
-                <CardTitle className="text-xl text-blue-600">Product & Delivery</CardTitle>
+                <CardTitle className="text-xl text-blue-600">AI & RAG Systems</CardTitle>
               </CardHeader>
               <CardContent>
                 <ul className="text-slate-600 space-y-2">
-                  <li>• Discovery & problem framing</li>
-                  <li>• Roadmapping & prioritization</li>
-                  <li>• Stakeholder management</li>
-                  <li>• Agile & hybrid delivery</li>
-                  <li>• Risk & RAID management</li>
-                  <li>• Sprint planning & execution</li>
+                  <li>• Local LLMs (Ollama)</li>
+                  <li>• RAG Pipelines</li>
+                  <li>• Python</li>
+                  <li>• Streamlit</li>
+                  <li>• OpenCV / YOLOv8</li>
                 </ul>
               </CardContent>
             </Card>
 
             <Card className="shadow-sm">
               <CardHeader>
-                <CardTitle className="text-xl text-blue-600">Technical Context</CardTitle>
+                <CardTitle className="text-xl text-blue-600">Edge & IoT Hardware</CardTitle>
               </CardHeader>
               <CardContent>
                 <ul className="text-slate-600 space-y-2">
-                  <li>• Embedded systems</li>
-                  <li>• IoT platforms & connectivity</li>
-                  <li>• AI/ML project delivery</li>
-                  <li>• Dashboards & analytics</li>
-                  <li>• Cloud architecture</li>
-                  <li>• Hardware integration</li>
+                  <li>• ESP32 / Custom PCBs</li>
+                  <li>• Capacitive & ToF Sensors</li>
+                  <li>• MQTT / REST Telemetry</li>
+                  <li>• Raspberry Pi / NVIDIA Jetson</li>
                 </ul>
               </CardContent>
             </Card>
 
             <Card className="shadow-sm">
               <CardHeader>
-                <CardTitle className="text-xl text-blue-600">Tools</CardTitle>
+                <CardTitle className="text-xl text-blue-600">Cloud & Enterprise Integration</CardTitle>
               </CardHeader>
               <CardContent>
                 <ul className="text-slate-600 space-y-2">
-                  <li>• Jira & Confluence</li>
-                  <li>• Azure DevOps</li>
-                  <li>• GitHub & version control</li>
-                  <li>• Power BI & Tableau</li>
-                  <li>• Figma & design tools</li>
-                  <li>• SQL & data analysis</li>
+                  <li>• Next.js</li>
+                  <li>• Vercel</li>
+                  <li>• GitHub</li>
+                  <li>• Boomi</li>
+                  <li>• SSO & API Governance</li>
+                </ul>
+              </CardContent>
+            </Card>
+
+            <Card className="shadow-sm">
+              <CardHeader>
+                <CardTitle className="text-xl text-blue-600">Delivery & Governance</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ul className="text-slate-600 space-y-2">
+                  <li>• Agile / Scrum (A-CSM, CSPO)</li>
+                  <li>• PRINCE2 Practitioner</li>
+                  <li>• SR&ED / ARD Applied R&D</li>
+                  <li>• ISO 9001:2015</li>
                 </ul>
               </CardContent>
             </Card>
@@ -699,9 +856,9 @@ export default function Portfolio() {
       </section>
 
       {/* Footer */}
-      <footer className="py-8 px-4 bg-white border-t border-slate-200">
-        <div className="container mx-auto max-w-6xl text-center text-slate-600">
-          <p>© 2025 Dushyant Puri. Product & Delivery Leader.</p>
+      <footer className="py-8 px-4 bg-[#18181B] border-t border-[#18181B]">
+        <div className="container mx-auto max-w-6xl text-center text-[#F8FAFC]/80">
+          <p>© 2026 Dushyant Puri. Product & Delivery Leader.</p>
         </div>
       </footer>
     </div>
