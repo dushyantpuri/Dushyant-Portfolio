@@ -3,11 +3,10 @@ import type { Metadata } from 'next'
 import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 
-import { Playfair_Display, Plus_Jakarta_Sans } from 'next/font/google'
+import { Inter } from 'next/font/google'
 
 // Initialize fonts
-const playfair = Playfair_Display({ subsets: ['latin'], weight: ['400','500','600','700','800','900'], style: ['normal','italic'], variable: '--font-serif' })
-const jakarta = Plus_Jakarta_Sans({ subsets: ['latin'], weight: ['300','400','500','600','700','800'], variable: '--font-sans' })
+const inter = Inter({ subsets: ['latin'], weight: ['300','400','500','600','700','800'], variable: '--font-sans' })
 
 export const metadata: Metadata = {
   title: 'Dushyant Puri – Product & Delivery Leader',
@@ -38,7 +37,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className={`${playfair.variable} ${jakarta.variable}`}>
+    <html lang="en" className={`${inter.variable}`}>
       <body className={`font-sans antialiased`}>
         {children}
         <Analytics />
